@@ -18,7 +18,7 @@ void getMatrixSize(const char* filename, int* rows, int* cols) {
         exit(1);
     }
 
-    char line[56384];
+    char line[86384];
     int r = 0, c = 0;
 
     while (fgets(line, sizeof(line), file)) {
@@ -132,11 +132,14 @@ int assign_variable(int* basic_index, int* non_basic_index, int entering_var, in
 
 
 
-int main(){
+int main(int argc, char *argv[]) {
+    const char* A_file = argv[1];
+    const char* b_file = argv[2];
+    const char* c_file = argv[3];
 
     int num_row, num_col;
     // get matrix size
-    getMatrixSize("A_matrix.txt", &num_row, &num_col);
+    getMatrixSize(A_file, &num_row, &num_col);
 
     // allocate memory 
     double** A = allocateMatrix(num_row, num_col);
@@ -145,9 +148,9 @@ int main(){
     double* original_c = allocateVector(num_col);
 
     // read files
-    readMatrixA("A_matrix.txt", A, num_row, num_col);
-    readVector("b_vector.txt", b, num_row);
-    readVector("c_vector.txt", c, num_col);
+    readMatrixA(A_file, A, num_row, num_col);
+    readVector(b_file, b, num_row);
+    readVector(c_file, c, num_col);
 
     // initial basis
     int N = num_row;  // number of basic variables
@@ -259,6 +262,8 @@ int main(){
                 double z = 0;
                 for (int i = 0; i < N; i++) z += c[basic_index[i]] * Xb[i];
                 printf("%f\n", z);
+
+                printf("iteration: %d\n", iter_num);
 
                 phase = 3;
                 break;
