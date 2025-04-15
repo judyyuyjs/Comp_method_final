@@ -231,7 +231,7 @@ int main(){
         cudaDeviceSynchronize();
         vecMatrixMulti<<<gridDim, blockDim>>>(p__dev, A_T__dev, non_basic_index__dev, temp_vec_M__dev, M, N);
         cudaDeviceSynchronize();
-        vecDiff_cN_bar<<<gridDim_M, blockDim>>>(non_basic_index__dev, c__dev, temp_vec_M__dev, cN_bar__dev, M, N);
+        vecDiff_cN_bar<<<gridDim_M, blockDim>>>(non_basic_index__dev, c__dev, temp_vec_M__dev, cN_bar__dev, M);
         cudaDeviceSynchronize();
         cudaMemcpy(cN_bar, cN_bar__dev, sizeof(float)*M, cudaMemcpyDeviceToHost);
 
