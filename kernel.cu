@@ -34,8 +34,8 @@ __global__ void vecMatrixMulti(const float *vec, const float *matrix, const int 
     int c = blockDim.x*blockIdx.x + threadIdx.x;
     if(c < m) {
         float sum = 0.0f;
-        for (int i = 0; i < n; i++) {
-            sum += vec[i] * matrix[matrix_index[i]*m+c];
+        for (int j = 0; j < n; j++) {
+            sum += vec[j] * matrix[matrix_index[c]*n+j];
         }
         r[c] = sum;
     }
