@@ -210,11 +210,9 @@ int main(){
     cudaMemcpy(non_basic_index__dev, non_basic_index, sizeof(int)*num_col, cudaMemcpyHostToDevice);
     cudaDeviceSynchronize();
 
-    float* p = (float *)malloc(N * sizeof(float));
     float* cN_bar = (float *)malloc(M * sizeof(float));
     float* Xb = (float *)malloc(N * sizeof(float));
     float* A_bar = (float *)malloc(num_row * sizeof(float));
-    float* temp_vec_M = (float *)malloc(M * sizeof(float));
     float* ratio = (float *)malloc(N * sizeof(float));
 
     unsigned int numBlocks = (N - 1)/THREADS_PER_BLOCK + 1;
@@ -231,7 +229,6 @@ int main(){
         cudaMemcpy(non_basic_index__dev, non_basic_index, sizeof(int)*num_row, cudaMemcpyHostToDevice);
         vecMatrixMulti_cB<<<gridDim, blockDim>>>(basic_index__dev, c__dev, B_inverse__dev, p__dev, N);
         cudaDeviceSynchronize();
-        cudaMemcpy(p, p__dev, sizeof(float)*num_row, cudaMemcpyDeviceToHost);
         vecMatrixMulti<<<gridDim, blockDim>>>(p__dev, A__dev, non_basic_index__dev, temp_vec_M__dev, M, N);
         cudaDeviceSynchronize();
         vecDiff_cN_bar<<<gridDim_M, blockDim>>>(non_basic_index__dev, c__dev, temp_vec_M__dev, cN_bar__dev, M, N);
@@ -299,7 +296,6 @@ int main(){
     stopTime(&timer);
     printf("total_time:%fs\n", elapsedTime(timer));
 
-    free(p);
     free(cN_bar);
     free(Xb);
     free(A_bar);
